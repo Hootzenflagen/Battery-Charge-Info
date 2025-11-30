@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Battery Charge Info</string>
+    <string name="battery_level">Battery</string>
+    <string name="time_to_full">Time to Full</string>
+    <string name="current">Current</string>
+    <string name="voltage">Voltage</string>
+    <string name="wattage">Power</string>
+    <string name="temperature">Temp</string>
+    <string name="technology">Type</string>
+    <string name="health">Health</string>
+    <string name="current_capacity">Charge</string>
+    <string name="total_capacity">Capacity</string>
+    <string name="device_info">Device</string>
+    <string name="reset">Reset</string>
+    <string name="battery_settings">Battery Settings</string>
+</resources>
