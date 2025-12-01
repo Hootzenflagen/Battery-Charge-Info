@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Amped"
+rootProject.name = "battery-charge-info"
 include(":app")

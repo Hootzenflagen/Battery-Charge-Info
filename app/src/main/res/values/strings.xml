@@ -14,4 +14,35 @@
     <string name="device_info">Device</string>
     <string name="reset">Reset</string>
     <string name="battery_settings">Battery Settings</string>
+
+    <!-- Formats -->
+    <string name="device_model_format">%1$s • %2$s</string>
+    <string name="battery_level_format">%d</string>
+    <string name="voltage_format">%.2f V</string>
+    <string name="current_format">%d mA</string>
+    <string name="wattage_format">%.1f W</string>
+    <string name="capacity_format">%d mAh</string>
+    <string name="temperature_format">%.1f °C</string>
+    <string name="time_hours_minutes">%1$dh %2$dm</string>
+    <string name="time_minutes">%dm</string>
+
+    <!-- Status texts -->
+    <string name="status_full">Full</string>
+    <string name="status_wireless">⚡ Wireless</string>
+    <string name="status_ac_charging">⚡ AC Charging</string>
+    <string name="status_usb_charging">⚡ USB Charging</string>
+    <string name="status_charging">⚡ Charging</string>
+    <string name="status_not_charging">Not Charging</string>
+    <string name="status_low_current">Low current</string>
+    <string name="status_calculating">Calculating...</string>
+    <string name="status_dash">--</string>
+
+    <!-- Health statuses -->
+    <string name="health_good">Good</string>
+    <string name="health_overheat">Overheat</string>
+    <string name="health_dead">Dead</string>
+    <string name="health_over_voltage">Over Voltage</string>
+    <string name="health_failure">Failure</string>
+    <string name="health_cold">Cold</string>
+    <string name="health_unknown">Unknown</string>
 </resources>

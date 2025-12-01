@@ -1,4 +1,4 @@
-package com.example.amped
+package com.hootzen.batterychargeinfo
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -15,7 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
-import com.example.amped.databinding.ActivityMainBinding
+import com.hootzen.batterychargeinfo.databinding.ActivityMainBinding
+import java.util.Locale
 import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         val deviceModel = "${Build.MANUFACTURER} ${Build.MODEL}"
         val androidVersion = "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})"
-        binding.tvDeviceModel.text = "$deviceModel • $androidVersion"
+        binding.tvDeviceModel.text = getString(R.string.device_model_format, deviceModel, androidVersion)
 
         // Battery settings button
         binding.btnBatterySettings.setOnClickListener {
@@ -64,12 +65,12 @@ class MainActivity : AppCompatActivity() {
         binding.btnReset.setOnClickListener {
             currentHistory.clear()
             lastTimeToFullUpdate = 0L
-            binding.tvTimeToFull.text = "Reset"
+            binding.tvTimeToFull.text = getString(R.string.reset)
         }
 
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(batteryReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            registerReceiver(batteryReceiver, filter, RECEIVER_NOT_EXPORTED)
         } else {
             registerReceiver(batteryReceiver, filter)
         }
@@ -82,12 +83,12 @@ class MainActivity : AppCompatActivity() {
             // Try the battery usage summary first (most common)
             val intent = Intent(Intent.ACTION_POWER_USAGE_SUMMARY)
             startActivity(intent)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             try {
                 // Fallback to battery saver settings
                 val intent = Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)
                 startActivity(intent)
-            } catch (e2: Exception) {
+            } catch (_: Exception) {
                 // Final fallback to general settings
                 val intent = Intent(Settings.ACTION_SETTINGS)
                 startActivity(intent)
@@ -145,17 +146,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Update hero section
-        binding.tvBatteryLevel.text = "$batteryPct"
+        binding.tvBatteryLevel.text = getString(R.string.battery_level_format, batteryPct)
 
         val statusText = when {
-            status == BatteryManager.BATTERY_STATUS_FULL -> "Full"
+            status == BatteryManager.BATTERY_STATUS_FULL -> getString(R.string.status_full)
             isCharging -> when {
-                wirelessCharge -> "⚡ Wireless"
-                acCharge -> "⚡ AC Charging"
-                usbCharge -> "⚡ USB Charging"
-                else -> "⚡ Charging"
+                wirelessCharge -> getString(R.string.status_wireless)
+                acCharge -> getString(R.string.status_ac_charging)
+                usbCharge -> getString(R.string.status_usb_charging)
+                else -> getString(R.string.status_charging)
             }
-            else -> "Not Charging"
+            else -> getString(R.string.status_not_charging)
         }
         binding.chipChargingStatus.text = statusText
 
@@ -168,32 +169,32 @@ class MainActivity : AppCompatActivity() {
         chipBgColor?.let { binding.chipChargingStatus.chipBackgroundColor = it }
 
         val voltageV = voltage / 1000.0
-        binding.tvVoltage.text = String.format("%.2f V", voltageV)
+        binding.tvVoltage.text = getString(R.string.voltage_format, voltageV)
 
         // Show signed current
-        binding.tvCurrent.text = "$displayCurrent mA"
+        binding.tvCurrent.text = getString(R.string.current_format, displayCurrent)
 
         val wattage = voltageV * abs(currentMa) / 1000.0
-        binding.tvWattage.text = String.format("%.1f W", wattage)
+        binding.tvWattage.text = getString(R.string.wattage_format, wattage)
 
-        binding.tvCurrentCapacity.text = "$currentCapacity mAh"
+        binding.tvCurrentCapacity.text = getString(R.string.capacity_format, currentCapacity)
         binding.tvTotalCapacity.text = if (maxBatteryCapacity > 0) {
-            "$maxBatteryCapacity mAh"
+            getString(R.string.capacity_format, maxBatteryCapacity)
         } else {
-            "Calculating..."
+            getString(R.string.status_calculating)
         }
 
-        binding.tvTemperature.text = String.format("%.1f °C", temperature)
+        binding.tvTemperature.text = getString(R.string.temperature_format, temperature)
         binding.tvTechnology.text = technology
 
         val healthText = when (health) {
-            BatteryManager.BATTERY_HEALTH_GOOD -> "Good"
-            BatteryManager.BATTERY_HEALTH_OVERHEAT -> "Overheat"
-            BatteryManager.BATTERY_HEALTH_DEAD -> "Dead"
-            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> "Over Voltage"
-            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> "Failure"
-            BatteryManager.BATTERY_HEALTH_COLD -> "Cold"
-            else -> "Unknown"
+            BatteryManager.BATTERY_HEALTH_GOOD -> getString(R.string.health_good)
+            BatteryManager.BATTERY_HEALTH_OVERHEAT -> getString(R.string.health_overheat)
+            BatteryManager.BATTERY_HEALTH_DEAD -> getString(R.string.health_dead)
+            BatteryManager.BATTERY_HEALTH_OVER_VOLTAGE -> getString(R.string.health_over_voltage)
+            BatteryManager.BATTERY_HEALTH_UNSPECIFIED_FAILURE -> getString(R.string.health_failure)
+            BatteryManager.BATTERY_HEALTH_COLD -> getString(R.string.health_cold)
+            else -> getString(R.string.health_unknown)
         }
         binding.tvHealth.text = healthText
 
@@ -208,7 +209,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (batteryPct >= 100) {
-                binding.tvTimeToFull.text = "Full"
+                binding.tvTimeToFull.text = getString(R.string.status_full)
             } else if (currentTime - lastTimeToFullUpdate >= 5000 || lastTimeToFullUpdate == 0L) {
                 val remainingPercent = 100 - batteryPct
                 val remainingCapacity = if (maxBatteryCapacity > 0) {
@@ -227,14 +228,18 @@ class MainActivity : AppCompatActivity() {
                     val timeToFullHours = remainingCapacity / avgCurrent
                     val hours = timeToFullHours.toInt()
                     val minutes = ((timeToFullHours - hours) * 60).toInt()
-                    binding.tvTimeToFull.text = if (hours > 0) "${hours}h ${minutes}m" else "${minutes}m"
+                    binding.tvTimeToFull.text = if (hours > 0) {
+                        getString(R.string.time_hours_minutes, hours, minutes)
+                    } else {
+                        getString(R.string.time_minutes, minutes)
+                    }
                     lastTimeToFullUpdate = currentTime
                 } else {
-                    binding.tvTimeToFull.text = "Low current"
+                    binding.tvTimeToFull.text = getString(R.string.status_low_current)
                 }
             }
         } else {
-            binding.tvTimeToFull.text = "--"
+            binding.tvTimeToFull.text = getString(R.string.status_dash)
             currentHistory.clear()
             lastTimeToFullUpdate = 0L
         }
