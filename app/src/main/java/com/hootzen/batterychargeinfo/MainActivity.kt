@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     private val currentHistory = mutableListOf<Int>()
     private var lastTimeToFullUpdate = 0L
     private var maxBatteryCapacity = 0
+    private var chargingStartTime = 0L
+    private var calculatedTimeToFull: String? = null
 
     private val batteryReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -65,6 +67,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnReset.setOnClickListener {
             currentHistory.clear()
             lastTimeToFullUpdate = 0L
+            chargingStartTime = 0L
+            calculatedTimeToFull = null
             binding.tvTimeToFull.text = getString(R.string.reset)
         }
 
@@ -203,6 +207,13 @@ class MainActivity : AppCompatActivity() {
             val currentTime = System.currentTimeMillis()
             val absCurrent = abs(currentMa)
 
+            // Initialize charging start time
+            if (chargingStartTime == 0L) {
+                chargingStartTime = currentTime
+            }
+
+            val timeSinceChargingStart = currentTime - chargingStartTime
+
             currentHistory.add(absCurrent)
             if (currentHistory.size > 10) {
                 currentHistory.removeAt(0)
@@ -210,38 +221,54 @@ class MainActivity : AppCompatActivity() {
 
             if (batteryPct >= 100) {
                 binding.tvTimeToFull.text = getString(R.string.status_full)
-            } else if (currentTime - lastTimeToFullUpdate >= 5000 || lastTimeToFullUpdate == 0L) {
-                val remainingPercent = 100 - batteryPct
-                val remainingCapacity = if (maxBatteryCapacity > 0) {
-                    (remainingPercent * maxBatteryCapacity / 100.0)
-                } else {
-                    (remainingPercent * 4000 / 100.0)
-                }
-
-                val avgCurrent = if (currentHistory.isNotEmpty()) {
-                    currentHistory.average().toInt()
-                } else {
-                    absCurrent
-                }
-
-                if (avgCurrent > 10) {
-                    val timeToFullHours = remainingCapacity / avgCurrent
-                    val hours = timeToFullHours.toInt()
-                    val minutes = ((timeToFullHours - hours) * 60).toInt()
-                    binding.tvTimeToFull.text = if (hours > 0) {
-                        getString(R.string.time_hours_minutes, hours, minutes)
+                calculatedTimeToFull = null
+            } else {
+                // Calculate the time to full value
+                if (currentTime - lastTimeToFullUpdate >= 5000 || lastTimeToFullUpdate == 0L) {
+                    val remainingPercent = 100 - batteryPct
+                    val remainingCapacity = if (maxBatteryCapacity > 0) {
+                        (remainingPercent * maxBatteryCapacity / 100.0)
                     } else {
-                        getString(R.string.time_minutes, minutes)
+                        (remainingPercent * 4000 / 100.0)
                     }
-                    lastTimeToFullUpdate = currentTime
-                } else {
-                    binding.tvTimeToFull.text = getString(R.string.status_low_current)
+
+                    val avgCurrent = if (currentHistory.isNotEmpty()) {
+                        currentHistory.average().toInt()
+                    } else {
+                        absCurrent
+                    }
+
+                    if (avgCurrent > 10) {
+                        val timeToFullHours = remainingCapacity / avgCurrent
+                        val hours = timeToFullHours.toInt()
+                        val minutes = ((timeToFullHours - hours) * 60).toInt()
+                        calculatedTimeToFull = if (hours > 0) {
+                            getString(R.string.time_hours_minutes, hours, minutes)
+                        } else {
+                            getString(R.string.time_minutes, minutes)
+                        }
+                        lastTimeToFullUpdate = currentTime
+                    } else {
+                        calculatedTimeToFull = getString(R.string.status_low_current)
+                    }
+                }
+
+                // Display logic with minimum 5 second delay for stable readings
+                binding.tvTimeToFull.text = when {
+                    // Show "Calculating..." for at least 5 seconds to get stable reading
+                    timeSinceChargingStart < 5000 -> getString(R.string.status_calculating)
+                    // After 5 seconds, show calculated value if available
+                    calculatedTimeToFull != null -> calculatedTimeToFull
+                    // If still no value after 5 seconds, keep showing calculating
+                    else -> getString(R.string.status_calculating)
                 }
             }
         } else {
             binding.tvTimeToFull.text = getString(R.string.status_dash)
             currentHistory.clear()
             lastTimeToFullUpdate = 0L
+            chargingStartTime = 0L
+            calculatedTimeToFull = null
         }
     }
 }

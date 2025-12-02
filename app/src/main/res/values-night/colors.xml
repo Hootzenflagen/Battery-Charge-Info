@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Reset button color (dark mode) -->
+    <color name="reset_icon_color">#FF90CAF9</color>
+</resources>

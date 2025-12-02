@@ -11,31 +11,32 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="12dp">
 
-        <!-- Hero Battery Display -->
+        <!-- Hero Battery Display (Left Column, Top) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/heroCard"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toStartOf="@id/chargingCard"
+            app:layout_constraintWidth_percent="0.48">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp">
+                android:padding="16dp">
 
                 <TextView
                     android:id="@+id/tvBatteryLevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="--"
-                    android:textSize="72sp"
+                    android:textSize="48sp"
                     android:textStyle="bold"
                     android:textColor="?colorOnSurface"
                     app:layout_constraintTop_toTopOf="parent"
@@ -46,12 +47,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="%"
-                    android:textSize="32sp"
+                    android:textSize="24sp"
                     android:textColor="?colorOnSurfaceVariant"
                     android:layout_marginStart="4dp"
                     app:layout_constraintBottom_toBottomOf="@id/tvBatteryLevel"
                     app:layout_constraintStart_toEndOf="@id/tvBatteryLevel"
-                    android:paddingBottom="12dp" />
+                    android:paddingBottom="8dp" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipChargingStatus"
@@ -63,7 +64,7 @@
                     app:chipStrokeWidth="0dp"
                     app:layout_constraintTop_toBottomOf="@id/tvBatteryLevel"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="4dp" />
 
                 <!-- Battery Settings Button -->
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -72,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/battery_settings"
                     app:srcCompat="@drawable/ic_battery_settings"
-                    app:fabSize="normal"
+                    app:fabSize="mini"
                     app:elevation="0dp"
                     app:backgroundTint="?colorSurfaceVariant"
                     app:tint="?colorOnSurfaceVariant"
@@ -84,160 +85,53 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Settings"
-                    android:textSize="10sp"
+                    android:textSize="9sp"
                     android:textColor="?colorOnSurfaceVariant"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="1dp"
                     app:layout_constraintTop_toBottomOf="@id/btnBatterySettings"
                     app:layout_constraintStart_toStartOf="@id/btnBatterySettings"
                     app:layout_constraintEnd_toEndOf="@id/btnBatterySettings" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Power Stats Row -->
-        <LinearLayout
-            android:id="@+id/powerStatsRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/heroCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="?colorSurfaceVariant">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wattage"
-                        android:textSize="12sp"
-                        android:textColor="?colorOnSurfaceVariant"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.1" />
-
-                    <TextView
-                        android:id="@+id/tvWattage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-- W"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?colorOnSurface" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="?colorSurfaceVariant">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvTimeToFullLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time_to_full"
-                        android:textSize="12sp"
-                        android:textColor="?colorOnSurfaceVariant"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/btnReset" />
-
-                    <TextView
-                        android:id="@+id/tvTimeToFull"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="?colorOnSurface"
-                        app:layout_constraintTop_toBottomOf="@id/tvTimeToFullLabel"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnReset"
-                        style="@style/Widget.Material3.Button.IconButton"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:contentDescription="@string/reset"
-                        app:icon="@android:drawable/ic_menu_rotate"
-                        app:iconSize="22dp"
-                        app:iconTint="@color/reset_icon_color"
-                        app:iconPadding="0dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-
-        <!-- Charging Details Card -->
+        <!-- Charging Details Card (Right Column, Top) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/chargingCard"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="8dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeColor="?colorOutlineVariant"
             app:strokeWidth="1dp"
-            app:layout_constraintTop_toBottomOf="@id/powerStatsRow"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/heroCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.48">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Charging Details"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="?colorOnSurface"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="12dp" />
 
                 <!-- Current & Voltage Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="24dp">
+                    android:layout_marginBottom="12dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -249,7 +143,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/current"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -257,9 +151,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- mA"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -273,7 +167,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/voltage"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -281,9 +175,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- V"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -294,7 +188,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="24dp">
+                    android:layout_marginBottom="12dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -306,7 +200,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/temperature"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -314,9 +208,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- °C"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -330,7 +224,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/health"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -338,9 +232,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -362,7 +256,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/current_capacity"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -370,9 +264,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- mAh"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -386,7 +280,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/total_capacity"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:textColor="?colorOnSurfaceVariant" />
 
                         <TextView
@@ -394,9 +288,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="-- mAh"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:textColor="?colorOnSurface"
-                            android:layout_marginTop="4dp" />
+                            android:layout_marginTop="2dp" />
 
                     </LinearLayout>
 
@@ -406,24 +300,134 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Device Info Card -->
+        <!-- Power Stats Row (Left Column, Bottom) -->
+        <LinearLayout
+            android:id="@+id/powerStatsRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/heroCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/deviceCard"
+            app:layout_constraintWidth_percent="0.48">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?colorSurfaceVariant">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/wattage"
+                        android:textSize="11sp"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.1" />
+
+                    <TextView
+                        android:id="@+id/tvWattage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-- W"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="?colorOnSurface" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?colorSurfaceVariant">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvTimeToFullLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/time_to_full"
+                        android:textSize="11sp"
+                        android:textColor="?colorOnSurfaceVariant"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btnReset" />
+
+                    <TextView
+                        android:id="@+id/tvTimeToFull"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="?colorOnSurface"
+                        app:layout_constraintTop_toBottomOf="@id/tvTimeToFullLabel"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnReset"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:contentDescription="@string/reset"
+                        app:icon="@android:drawable/ic_menu_rotate"
+                        app:iconSize="20dp"
+                        app:iconTint="@color/reset_icon_color"
+                        app:iconPadding="0dp"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- Device Info Card (Right Column, Bottom) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/deviceCard"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="?colorSurfaceVariant"
             app:layout_constraintTop_toBottomOf="@id/chargingCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintStart_toEndOf="@id/powerStatsRow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintWidth_percent="0.48">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:gravity="center_vertical">
 
                 <LinearLayout
@@ -436,7 +440,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/device_info"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:textColor="?colorOnSurfaceVariant"
                         android:textAllCaps="true"
                         android:letterSpacing="0.1" />
@@ -446,9 +450,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="--"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="?colorOnSurface"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="2dp" />
 
                 </LinearLayout>
 
@@ -457,11 +461,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Li-ion"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textColor="?colorOnSurfaceVariant"
                     android:background="?colorSurface"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp" />
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp" />
 
             </LinearLayout>
 

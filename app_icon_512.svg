@@ -1,0 +1,25 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Green background -->
+  <rect width="512" height="512" fill="#4CAF50" rx="80"/>
+
+  <!-- Battery icon centered -->
+  <g transform="translate(106, 106)">
+    <!-- Battery body -->
+    <path
+      fill="#FFFFFF"
+      d="M220,80 L200,80 L200,40 L100,40 L100,80 L80,80 C67,80 57,90 57,103 L57,343 C57,356 67,366 80,366 L220,366 C233,366 243,356 243,343 L243,103 C243,90 233,80 220,80 Z"/>
+
+    <!-- Charging bolt -->
+    <path
+      fill="#4CAF50"
+      d="M190,140 L120,140 L120,90 L90,210 L150,210 L150,270 Z"/>
+  </g>
+
+  <!-- Subtle shadow effect on battery -->
+  <g transform="translate(106, 106)" opacity="0.1">
+    <path
+      fill="#000000"
+      d="M220,80 L200,80 L200,40 L100,40 L100,80 L80,80 C67,80 57,90 57,103 L57,343 C57,356 67,366 80,366 L220,366 C233,366 243,356 243,343 L243,103 C243,90 233,80 220,80 Z"
+      transform="translate(0, 4)"/>
+  </g>
+</svg>
