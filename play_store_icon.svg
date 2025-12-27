@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Green background with rounded corners (Play Store style) -->
+  <rect width="512" height="512" rx="90" ry="90" fill="#4CAF50"/>
+
+  <!-- White battery terminal -->
+  <rect x="206" y="80" width="100" height="36" rx="8" ry="8" fill="#FFFFFF"/>
+
+  <!-- White battery body with rounded corners -->
+  <rect x="156" y="116" width="200" height="316" rx="24" ry="24" fill="#FFFFFF"/>
+
+  <!-- Green lightning bolt inside battery -->
+  <path d="M296 186 L206 306 L246 306 L226 392 L316 262 L276 262 Z" fill="#4CAF50"/>
+</svg>

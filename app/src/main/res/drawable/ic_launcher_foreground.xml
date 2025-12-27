@@ -4,16 +4,16 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <group
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        android:translateX="27"
-        android:translateY="27">
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,27C40.2,27 29,38.2 29,52s11.2,25 25,25 25,-11.2 25,-25S67.8,27 54,27zM54,72c-11,0 -20,-9 -20,-20s9,-20 20,-20 20,9 20,20S65,72 54,72z" />
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,42c-5.5,0 -10,4.5 -10,10s4.5,10 10,10 10,-4.5 10,-10S59.5,42 54,42z" />
-    </group>
+    <!-- Battery terminal -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,28h12v4h-12z" />
+    <!-- Battery body with rounded corners -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,32h24c2.2,0 4,1.8 4,4v40c0,2.2 -1.8,4 -4,4h-24c-2.2,0 -4,-1.8 -4,-4v-40c0,-2.2 1.8,-4 4,-4z" />
+    <!-- Green lightning bolt inside battery -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M57,42l-10,16h6l-2,14l10,-18h-6z" />
 </vector>
