@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import com.hootzen.batterychargeinfo.databinding.ActivityMainBinding
+import java.io.File
 import java.util.Locale
 import kotlin.math.abs
 
@@ -116,6 +117,34 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(batteryReceiver)
     }
 
+    /**
+     * Fallback to read battery current from sysfs when BatteryManager API fails.
+     * Some older Samsung devices don't support BATTERY_PROPERTY_CURRENT_NOW.
+     */
+    private fun readCurrentFromSysfs(): Int? {
+        val paths = listOf(
+            "/sys/class/power_supply/battery/current_now",
+            "/sys/class/power_supply/battery/batt_current_ua_avg"
+        )
+        for (path in paths) {
+            try {
+                val value = File(path).readText().trim().toIntOrNull()
+                if (value != null && value != 0) return value
+            } catch (_: Exception) { }
+        }
+        return null
+    }
+
+    /**
+     * Fallback to read battery charge counter from sysfs.
+     */
+    private fun readChargeCounterFromSysfs(): Int? {
+        return try {
+            File("/sys/class/power_supply/battery/charge_counter")
+                .readText().trim().toIntOrNull()
+        } catch (_: Exception) { null }
+    }
+
     private fun updateBatteryInfo(intent: Intent) {
         val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
@@ -136,41 +165,39 @@ class MainActivity : AppCompatActivity() {
         val health = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1)
 
         val bm = getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
-        val currentRaw = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) ?: 0
 
-        // Samsung devices often report current in mA instead of µA (Android standard)
-        // They may also report with inverted sign (negative when charging)
-        // Detect this by checking if the absolute value is suspiciously low for µA
-        // Typical charging current is 500-5000 mA, so in µA that's 500,000-5,000,000
-        // If we see values < 50,000, it's likely already in mA
-        val isSamsungDevice = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-        val currentMa = when {
-            // Samsung workaround: if value seems to be in mA already (too small for µA)
-            isSamsungDevice && abs(currentRaw) < 50000 -> currentRaw
-            // Some devices report in µA but with very small values, check threshold
-            abs(currentRaw) < 1000 -> currentRaw  // Already in mA or negligible
-            // Standard case: convert from µA to mA
-            else -> currentRaw / 1000
+        // Try BatteryManager API first, fall back to sysfs if unavailable
+        val bmCurrent = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CURRENT_NOW) ?: 0
+        val currentRaw = if (bmCurrent == 0 || bmCurrent == Int.MIN_VALUE) {
+            readCurrentFromSysfs() ?: 0
+        } else bmCurrent
+
+        // Android standard is µA, but some OEMs report mA. Use wattage to validate:
+        // If raw value interpreted as mA yields >100W, it's likely in µA.
+        val voltageV = voltage / 1000.0
+        val currentMa = if (voltageV > 0 && currentRaw != 0) {
+            val testWattage = voltageV * abs(currentRaw) / 1000.0
+            if (testWattage > 100) currentRaw / 1000 else currentRaw
+        } else {
+            // Fallback: values > 15000 are likely µA
+            if (abs(currentRaw) > 15000) currentRaw / 1000 else currentRaw
         }
 
-        // Show actual sign: positive when charging, negative when discharging
-        // Some devices (including Samsung) may report inverted signs
-        val displayCurrent = when {
-            isCharging && currentMa < 0 -> abs(currentMa)  // Fix inverted sign when charging
-            isCharging -> abs(currentMa)
-            !isCharging && currentMa > 0 -> -abs(currentMa)  // Discharging should be negative
-            else -> currentMa
-        }
+        // Normalize sign: positive when charging, negative when discharging
+        val displayCurrent = if (isCharging) abs(currentMa) else -abs(currentMa)
 
-        val currentCapacityRaw = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER) ?: 0
+        // Try BatteryManager API first, fall back to sysfs if unavailable
+        val bmCapacity = bm?.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER) ?: 0
+        val currentCapacityRaw = if (bmCapacity == 0 || bmCapacity == Int.MIN_VALUE) {
+            readChargeCounterFromSysfs() ?: 0
+        } else bmCapacity
 
-        // Samsung may also report charge counter in mAh instead of µAh
-        // Typical battery capacity is 3000-6000 mAh, so in µAh that's 3,000,000-6,000,000
-        // If we see values < 50,000, it's likely already in mAh
-        val currentCapacity = when {
-            isSamsungDevice && abs(currentCapacityRaw) < 50000 -> currentCapacityRaw
-            abs(currentCapacityRaw) < 1000 -> currentCapacityRaw  // Already in mAh or negligible
-            else -> currentCapacityRaw / 1000
+        // Validate capacity units: typical phone battery is 3000-6000mAh
+        // Values > 10000 are likely in µAh
+        val currentCapacity = if (abs(currentCapacityRaw) > 10000) {
+            currentCapacityRaw / 1000
+        } else {
+            currentCapacityRaw
         }
 
         if (maxBatteryCapacity == 0 && currentCapacity > 0 && batteryPct in 20..100) {
@@ -200,7 +227,6 @@ class MainActivity : AppCompatActivity() {
         }
         chipBgColor?.let { binding.chipChargingStatus.chipBackgroundColor = it }
 
-        val voltageV = voltage / 1000.0
         binding.tvVoltage.text = getString(R.string.voltage_format, voltageV)
 
         // Show signed current
