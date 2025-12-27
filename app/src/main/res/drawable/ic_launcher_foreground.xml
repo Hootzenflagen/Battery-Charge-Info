@@ -12,8 +12,8 @@
     <path
         android:fillColor="#FFFFFF"
         android:pathData="M42,32h24c2.2,0 4,1.8 4,4v40c0,2.2 -1.8,4 -4,4h-24c-2.2,0 -4,-1.8 -4,-4v-40c0,-2.2 1.8,-4 4,-4z" />
-    <!-- Green lightning bolt inside battery -->
+    <!-- Yellow/orange lightning bolt inside battery (vertically centered) -->
     <path
-        android:fillColor="#4CAF50"
-        android:pathData="M57,42l-10,16h6l-2,14l10,-18h-6z" />
+        android:fillColor="#FFC107"
+        android:pathData="M57,38l-10,16h6l-2,14l10,-18h-6z" />
 </vector>

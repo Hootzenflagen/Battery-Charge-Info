@@ -8,6 +8,6 @@
   <!-- White battery body with rounded corners -->
   <rect x="156" y="116" width="200" height="316" rx="24" ry="24" fill="#FFFFFF"/>
 
-  <!-- Green lightning bolt inside battery -->
-  <path d="M296 186 L206 306 L246 306 L226 392 L316 262 L276 262 Z" fill="#4CAF50"/>
+  <!-- Yellow/orange lightning bolt inside battery (vertically centered) -->
+  <path d="M296 166 L206 286 L246 286 L226 372 L316 242 L276 242 Z" fill="#FFC107"/>
 </svg>
